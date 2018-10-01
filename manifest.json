@@ -1,10 +1,12 @@
 {
   "name": "EXAPUNKS Solitaire on the Web",
   "short_name": "XA Solitaire",
-  "start_url": "/index.html",
-  "display": "minimal-ui",
   "description": "A solitaire card game variant from the video game EXAPUNKS, developed using JavaScript & HTML5 Canvas",
+  "start_url": "./index.html",
+  "display": "minimal-ui",
+  "orientation": "portrait",
   "theme_color": "#FFF",
+  "background_color": "#FFF",
   "icons": [
     {
       "src": "images/icon-192.png",
