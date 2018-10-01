@@ -1,5 +1,4 @@
 const filesToCache = [
-  '/',
   'index.html',
   'style.css',
   'manifest.json',
@@ -8,7 +7,7 @@ const filesToCache = [
   'scripts/solitaire.js',
 ];
 
-const staticCacheName = 'cache-v1';
+const staticCacheName = 'solitaire-game-html-canvas-cache-v1';
 
 self.addEventListener('install', event => {
   console.log('Attempting to install service worker and cache static assets');
