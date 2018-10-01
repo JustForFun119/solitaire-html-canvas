@@ -1,0 +1,19 @@
+/* @import url('https://fonts.googleapis.com/css?family=Lato'); */
+
+* {
+  font-family: Lato;
+  box-sizing: border-box;
+}
+
+#solitaireGame {
+  text-align: center;
+}
+
+#solitaireGame>canvas {
+  border: 2px solid grey;
+  touch-action: none;
+}
+
+button#btnNewGame {
+  font-size: 1.2em;
+}
