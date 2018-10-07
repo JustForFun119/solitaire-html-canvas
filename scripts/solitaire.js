@@ -100,7 +100,7 @@ class SolitaireGame {
   }
 
   newGame() {
-    console.log('SolitaireGame.newGame');
+    // console.log('SolitaireGame.newGame');
     this.isGameOver = false;
 
     // populate card stacks
@@ -305,10 +305,10 @@ class SolitaireGame {
   }
 }
 
-/**
- * TODO:
- * -  responsive for large/wide screen
- */
+// respond to screen size & mobile (emoji text size)
+const isWidescreen = window.innerWidth >= 720;
+const isMobileBrowser = isUsingMobileBrowser();
+
 class SolitaireCanvas {
 
   constructor(gameCanvas) {
@@ -317,10 +317,12 @@ class SolitaireCanvas {
     this.canvasCtx = this.canvas.getContext('2d');
     // canvas size
     this.canvas.width = window.innerWidth * 0.95;
-    this.canvas.height = window.innerHeight * 0.85;
+    this.canvas.height = isWidescreen ? window.innerHeight * 0.66 :
+      window.innerHeight * 0.85;
 
     // game instance
     this.game = new SolitaireGame(this.onGameOver.bind(this));
+    // game options
     this.gameOptions = {
       suitColor: {
         'S': 'black',
@@ -340,17 +342,17 @@ class SolitaireCanvas {
         6: '6'
       },
       // stack position/index of free cell
-      freeCellPos: 4
+      freeCellPos: isWidescreen ? 9 : 4
     };
 
-    // game options
-    const isMobileBrowser = isUsingMobileBrowser();
     // card & card stack graphics values
-    const cardWidth = this.canvas.width / 6.5;
+    const cardWidth = isWidescreen ? this.canvas.width / 12 :
+      this.canvas.width / 6.5;
     const cardHeight = cardWidth * 3.5 / 2.5;
     const gapWidth = 10;
-    const boardPadding = { x: 16, y: 16 };
+    const boardPadding = { x: 16, y: 12 };
     this.canvasOptions = {
+      columnsPerRow: isWidescreen ? 10 : 5,
       cardWidth,
       cardHeight,
       cardStackOffset: 28,
@@ -364,12 +366,12 @@ class SolitaireCanvas {
       },
       cardText: {
         fontSize: {
-          emojiSymbol: isMobileBrowser ? 24 : 20,
+          emojiSymbol: isMobileBrowser ? 20 : 24,
           text: 20
         },
         offset: {
           x: cardWidth / 12,
-          y: isMobileBrowser ? window.innerWidth / 20 : window.innerWidth / 22
+          y: 20
         }
       },
       // customizable (not affect gameplay/render)
@@ -680,17 +682,20 @@ class SolitaireCanvas {
     };
 
     const { cardWidth, cardHeight, gapWidth, gapHeight, cardStackOffset,
-      boardPadding } = this.canvasOptions;
+      boardPadding, columnsPerRow } = this.canvasOptions;
+    const stackRowOffset = clamp(2.5, window.innerHeight / 200, 3);
 
     for (let i = 0; i < this.game.cardStacks.length; i++) {
       let pos = i;
-      if (i >= this.gameOptions.freeCellPos) { // free cell on top right slot
+      if (i >= this.gameOptions.freeCellPos) {
+        // increment stack position if position is free cell
         pos += 1;
       }
       // set stack position
       const stackPos = {
-        x: boardPadding.x + (cardWidth + gapWidth) * (pos % 5),
-        y: boardPadding.y + ((cardHeight * 3 + gapHeight) * Math.floor(pos / 5))
+        x: boardPadding.x + (cardWidth + gapWidth) * (pos % columnsPerRow),
+        y: boardPadding.y + ((cardHeight * stackRowOffset + gapHeight) *
+          Math.floor(pos / columnsPerRow))
       };
       // Round off screen coordinates for canvas perf
       stackPos.x = Math.floor(stackPos.x);
@@ -821,4 +826,8 @@ function isUsingMobileBrowser() {
   // Android & iPhone only
   return Boolean(window.navigator.userAgent.match(/Android/i) ||
     window.navigator.userAgent.match(/iPhone/i));
+}
+
+function clamp(min, value, max) {
+  return min < value ? (value < max ? value : max) : min;
 }

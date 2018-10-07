@@ -9,7 +9,6 @@
     });
   }
 
-  console.log('init');
   // init game on HTML5 Canvas
   const gameCanvas = document.getElementById('gameCanvas');
   // start solitaire game on canvas
