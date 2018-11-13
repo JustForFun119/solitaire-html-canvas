@@ -1,7 +1,7 @@
 {
-  "name": "EXAPUNKS Solitaire on the Web",
+  "name": "EXAPUNKS Solitaire",
   "short_name": "XA Solitaire",
-  "description": "A solitaire card game variant from the video game EXAPUNKS, developed using JavaScript & HTML5 Canvas",
+  "description": "Solitaire card game variant from the video game EXAPUNKS",
   "start_url": "./index.html",
   "display": "minimal-ui",
   "orientation": "portrait",

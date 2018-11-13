@@ -5,12 +5,15 @@
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+}
+
 #solitaireGame {
   text-align: center;
 }
 
 #solitaireGame>canvas {
-  border: 2px solid grey;
   touch-action: none;
 }
 

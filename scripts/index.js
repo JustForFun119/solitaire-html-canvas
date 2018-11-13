@@ -1,12 +1,13 @@
 (function () {
-  // service worker
+  // register service worker if available
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then(registration => {
-      console.log('service worker: registration successful, scope is:',
-        registration);
-    }).catch(error => {
-      console.log('service worker: registration failed, error:', error);
-    });
+    navigator.serviceWorker.register('./sw.js').then(
+      registration => {
+        console.log('service worker: registration successful, scope is:',
+          registration);
+      }).catch(error => {
+        console.log('service worker: registration failed, error:', error);
+      });
   }
 
   // init game on HTML5 Canvas
@@ -20,6 +21,7 @@
   });
 
   // wait for CSS font loading (if possible)
+  // then start the game
   if ('fonts' in document) {
     document.fonts.ready.then(startGame);
   } else {
@@ -29,5 +31,4 @@
   function startGame() {
     gameInstance.startGame();
   }
-
 })();

@@ -1,18 +1,18 @@
 // 'Patience' - Solitaire card game (found in video game EXAPUNKS)
 
 class SolitaireGame {
-  static get Card() {
-    return {
-      Suits: ['S', 'H', 'C', 'D'],
-      Values: [10, 9, 8, 7, 6]
-    };
-  }
-  static isBlackSuit(card) { return card.suit === 'S' || card.suit === 'C'; }
-  static isRedSuit(card) { return card.suit === 'H' || card.suit === 'D'; }
 
   constructor(onGameOverCallback) {
     // register game over callback
     this.gameOverCallback = onGameOverCallback;
+
+    // game properties
+    this.props = {
+      Card: {
+        Suits: ['S', 'H', 'C', 'D'],
+        Values: [10, 9, 8, 7, 6]
+      }
+    };
 
     // game rules
     this.rule = {
@@ -21,15 +21,15 @@ class SolitaireGame {
       // S, H, C, D: same value/suit & same color
       validStack: (card, nextCard) => {
         // console.log('game rule.validStack', card, nextCard);
-        if (SolitaireGame.Card.Values.includes(card.value)) {
+        if (this.props.Card.Values.includes(card.value)) {
           // 10, 9, 8, 7, 6: descending order of value & alternate color
-          const isDiffSuitColor = SolitaireGame.isBlackSuit(card) ?
-            SolitaireGame.isRedSuit(nextCard) :
-            SolitaireGame.isBlackSuit(nextCard);
+          const isDiffSuitColor = this.isBlackSuit(card) ?
+            this.isRedSuit(nextCard) :
+            this.isBlackSuit(nextCard);
           if (nextCard.value === card.value - 1 && isDiffSuitColor) {
             return true;
           }
-        } else if (SolitaireGame.Card.Suits.includes(card.value)) {
+        } else if (this.props.Card.Suits.includes(card.value)) {
           // S, H, C, D: same value/suit & same color
           if (card.value === nextCard.value && card.suit === nextCard.suit) {
             return true;
@@ -76,11 +76,11 @@ class SolitaireGame {
 
     // cards in this solitaire game
     const baseCardsBySuits = [
-      ...SolitaireGame.Card.Suits.map(suit => [
+      ...this.props.Card.Suits.map(suit => [
         // 4 suit cards of each suit
         ...Array(4).fill({ suit, value: suit }),
         // 5 value cards of each suit
-        ...SolitaireGame.Card.Values.map(i => ({ suit, value: i }))
+        ...this.props.Card.Values.map(i => ({ suit, value: i }))
       ])
     ];
     this.baseCards = baseCardsBySuits.reduce((allCards, cardsOfSuit) =>
@@ -240,7 +240,7 @@ class SolitaireGame {
       if (stack.length === 0) continue; // fail if empty stack
 
       const bottomCard = stack[0];
-      if (SolitaireGame.Card.Values.includes(bottomCard.value)) {
+      if (this.props.Card.Values.includes(bottomCard.value)) {
         // need all 5 value cards
         if (stack.length < SolitaireGame.length) return false;
         // number/value card: descending order stack & alternate suit
@@ -292,6 +292,10 @@ class SolitaireGame {
     return selectedCards;
   }
 
+  // helper methods
+  isBlackSuit(card) { return card.suit === 'S' || card.suit === 'C'; }
+  isRedSuit(card) { return card.suit === 'H' || card.suit === 'D'; }
+
   log() {
     console.groupCollapsed('game state');
     console.log('free cell', this.freeCellCard);
@@ -316,7 +320,7 @@ class SolitaireCanvas {
     this.canvas = gameCanvas;
     this.canvasCtx = this.canvas.getContext('2d');
     // canvas size
-    this.canvas.width = window.innerWidth * 0.95;
+    this.canvas.width = window.innerWidth * 1.0;
     this.canvas.height = isWidescreen ? window.innerHeight * 0.66 :
       window.innerHeight * 0.85;
 
@@ -764,7 +768,7 @@ class SolitaireCanvas {
     const { cardText } = this.canvasOptions;
     this.drawText(this.gameOptions.valueText[card.value],
       x + cardText.offset.x, y + cardText.offset.y, {
-        fontSizePx: (SolitaireGame.Card.Suits.includes(card.value) ?
+        fontSizePx: (this.game.props.Card.Suits.includes(card.value) ?
           cardText.fontSize.emojiSymbol : cardText.fontSize.text),
         color: this.gameOptions.suitColor[card.suit]
       });
